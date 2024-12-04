@@ -1,0 +1,7 @@
+ESP32/.pio
+ESP32/.vscode/.browse.c_cpp.db*
+ESP32/.vscode/c_cpp_properties.json
+ESP32/.vscode/launch.json
+ESP32/.vscode/ipch
+ESP32/include/config.h
+Backend/.env

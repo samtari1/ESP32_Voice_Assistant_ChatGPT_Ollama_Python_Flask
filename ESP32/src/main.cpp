@@ -11,6 +11,9 @@
 #include <HTTPClient.h>
 #include "config.h"
 
+#define WIFI_SSID "ChocolateCupcakes"
+#define WIFI_PASSWORD "SamCC281!"
+
 // RTOS Ticks Delay
 #define TickDelay(ms) vTaskDelay(pdMS_TO_TICKS(ms))
 
@@ -42,7 +45,7 @@
 #define I2S_SAMPLE_RATE (16000)
 #define I2S_SAMPLE_BITS (16)
 #define I2S_READ_LEN (16 * 1024)
-#define RECORD_TIME (5) // Seconds
+#define RECORD_TIME (2) // Seconds
 #define I2S_CHANNEL_NUM (1)
 #define FLASH_RECORD_SIZE (I2S_CHANNEL_NUM * I2S_SAMPLE_RATE * I2S_SAMPLE_BITS / 8 * RECORD_TIME)
 
@@ -55,10 +58,12 @@ const int headerSize = 44;
 bool isWIFIConnected;
 
 // Node Js server Adresses
-const char *serverUploadUrl = "http://192.168.0.15:3000/uploadAudio";
-const char *serverBroadcastUrl = "http://192.168.0.15:3000/broadcastAudio";
-const char *broadcastPermitionUrl = "http://192.168.0.15:3000/checkVariable";
-
+const char *serverUploadUrl = "http://192.168.1.225:3000/uploadAudio";
+const char *serverBroadcastUrl = "http://192.168.1.225:3000/broadcastAudio";
+const char *broadcastPermitionUrl = "http://192.168.1.225:3000/checkVariable";
+// const char *serverUploadUrl = "https://dryangai.com/api/uploadAudio";
+// const char *serverBroadcastUrl = "https://dryangai.com/api/broadcastAudio";
+// const char *broadcastPermitionUrl = "https://dryangai.com/api/checkVariable";
 // Prototypes
 void SPIFFSInit();
 void listSPIFFS(void);
@@ -402,7 +407,7 @@ void semaphoreWait(void *arg)
         String payload = http.getString();
         // Serial.println("Payload Value- " + payload);
 
-        if (payload.indexOf("\"ready\":true") > -1)
+        if (payload.indexOf("true") != -1 || payload.indexOf("True") != -1)
         {
           Serial.println("Recieving confirmed! Start broadcasting...");
           xTaskCreate(broadcastAudio, "broadcastAudio", 4096, NULL, 2, NULL);
